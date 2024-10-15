@@ -1,10 +1,22 @@
+export const GARDEN_GROUP_ID_PREFIX = 'gardenGroup';
+export const PLANT_ID_PREFIX = 'plant';
+
 export enum GardenRequirement {
   PET_FRIENDLY = "Pet-Friendly",
   EDIBLE = "Edible",
   CONTAINER_FRIENDLY = "Container-Friendly"
 }
 
-export interface GardenGroup {
+export interface Plant extends DynamicKeyObject {
+  id: string,
+  name: string,
+}
+
+interface DynamicKeyObject {
+  [key: string]: any
+}
+
+export interface GardenGroup extends DynamicKeyObject{
   id: string,
   name: string,
   reqs: Array<GardenRequirement>,
@@ -19,7 +31,6 @@ export enum SunlightOffering {
 }
 
 export const storeGardenGroup = (gardenGroup: GardenGroup) => {
-  console.log(gardenGroup)
   localStorage.setItem(gardenGroup.id, JSON.stringify(gardenGroup));
 };
 
@@ -32,6 +43,21 @@ export const getGardenGroup = (gardenGroupId: string) => {
   }
 };
 
-export interface Plant {
-  name: string
-}
+export const deleteGardenGroup = (gardenGroup: GardenGroup) => {
+  localStorage.removeItem(gardenGroup.id);
+};
+
+export const createModelId = (modelNamePrefix: string): string => {
+  return `${modelNamePrefix}${Math.floor(Math.random() * 100_000_000)}`;
+};
+
+export const getAllGardenGroups = () => {
+  const gardenGroupIds = Object.keys(localStorage).filter((key) => {
+    return key.startsWith(GARDEN_GROUP_ID_PREFIX);
+  });
+
+  return gardenGroupIds.map((groupId) => {
+    return getGardenGroup(groupId);
+  }); 
+};
+

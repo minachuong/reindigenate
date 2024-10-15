@@ -4,10 +4,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SetLocation from './SetLocation';
 import CreateGardenGroup from './CreateGardenGroup';
 import '../scss/index.scss';
+import 'bootstrap-icons/font/bootstrap-icons.scss';
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // Includes Popper.js
 import AddPlantsToGardenGroup from './AddPlantsToGardenGroup';
+import GardenGroupIndex from './GardenGroupIndex';
 
 const router = createBrowserRouter([
+  {
+    path: '/gardenIndex',
+    element: <GardenGroupIndex />
+  },
   {
     path: '/addplants/:gardenGroupId',
     element: <AddPlantsToGardenGroup />

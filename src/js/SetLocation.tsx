@@ -24,7 +24,6 @@ const SetLocation = () => {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
-          console.log(position)
           const coords = { latitude: position.coords.latitude, longitude: position.coords.longitude };
           localStorage.setItem('lat', coords.latitude.toString());
           localStorage.setItem('long', coords.longitude.toString());
@@ -50,10 +49,14 @@ const SetLocation = () => {
 
   return (
     <>
-      <h1>Reindigenate</h1>
-      <h3>the land you occupy with native plants</h3>
-      { !retrievedCoordinates.latitude && <p>Please allow us to know your location. Otherwise, we'll use a default location.</p> }
-      <p>Loading...</p>
+      <h1 className="text-center pt-3">Reindigenate</h1>
+      <h3 className="text-center px-3 fs-5">the land you occupy with native plants</h3>
+      {!retrievedCoordinates.latitude &&
+        <p className="text-center px-3 pb-3"><small>Please allow us to know your location. Otherwise, we'll use a default location.</small></p>
+      }
+      <div className="container position-relative">
+        <p className="position-absolute top-50 start-50 translate-middle">Loading location...</p>
+      </div>
     </>
   );
 };

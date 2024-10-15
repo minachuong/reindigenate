@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
-import { GardenGroup, getGardenGroup, Plant, storeGardenGroup } from "./GardenGroupService";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { createModelId, deleteGardenGroup, GardenGroup, GardenRequirement, getGardenGroup, Plant, PLANT_ID_PREFIX, storeGardenGroup } from "./GardenGroupService";
 import { useEffect, useRef, useState } from "react";
+import ActionableListItems, { ActionOptions, BIIconSignal } from "./ActionableListItems";
 
 const AddPlantsToGardenGroup = () => {
   const params = useParams();
@@ -12,8 +13,6 @@ const AddPlantsToGardenGroup = () => {
   useEffect(() => {
     if (gardenGroupId) {
       const retrievedGardenGroup = getGardenGroup(gardenGroupId);
-      console.log('retrievedGardenGroup', retrievedGardenGroup)
-
       setGardenGroup(retrievedGardenGroup);
     } else {
       console.error(`Could not retrieve GardenGroup with Id ${gardenGroupId}`);
@@ -21,11 +20,19 @@ const AddPlantsToGardenGroup = () => {
     }
   }, []);
 
-  const addPlantToGroup = () => {
-    const updatedGroup = Object.assign({}, gardenGroup);
-    updatedGroup.plants.push(newPlant);
+  const updateGardenGroup = (group: GardenGroup) => {
+    // Object.assign clones the group stored in state
+    //   and creates a new reference for the object 
+    //   necessary for change detection
+    const updatedGroup = Object.assign({}, group);
     storeGardenGroup(updatedGroup);
     setGardenGroup(updatedGroup);
+  };
+
+  const addPlantToGroup = () => {
+    newPlant.id = createModelId(PLANT_ID_PREFIX);
+    gardenGroup.plants.push(newPlant);
+    updateGardenGroup(gardenGroup);
     clearAddPlantInput();
   };
 
@@ -37,43 +44,85 @@ const AddPlantsToGardenGroup = () => {
 
   const onPlantChange = (event: React.FormEvent<HTMLInputElement>) => {
     const inputElement = event.target as HTMLInputElement;
-    setNewPlant({name: inputElement.value} as Plant);
+    const updatedPlant = Object.assign({}, newPlant);
+    updatedPlant.name = inputElement.value;
+    setNewPlant(updatedPlant as Plant);
   };
-  
-  const groupHasPlants = () => {
-    return gardenGroup.plants && gardenGroup.plants.length > 0;
+
+  const show = (groupProp: string) => {
+    return gardenGroup[groupProp] && gardenGroup[groupProp].length > 0;
+  };
+
+  const deleteGroupReq = (req: GardenRequirement) => {
+    const indexOfReq = gardenGroup.reqs.indexOf(req);
+    gardenGroup.reqs.splice(indexOfReq, 1);
+    updateGardenGroup(gardenGroup);
+  };
+
+  const groupReqActions: Array<ActionOptions> = [
+    {
+      action: deleteGroupReq,
+      biIconName: 'bi-trash',
+      biIconSignal: BIIconSignal.DANGER
+    }
+  ];
+
+  const deletePlant = (plant: Plant) => {
+    const indexOfPlant = gardenGroup.plants.indexOf(plant);
+    gardenGroup.plants.splice(indexOfPlant, 1);
+    updateGardenGroup(gardenGroup);
+  };
+
+  const plantActions: Array<ActionOptions> = [
+    {
+      action: deletePlant,
+      biIconName: 'bi-trash',
+      biIconSignal: BIIconSignal.DANGER
+    }
+  ];
+
+  const navigate = useNavigate();
+  const removeGardenGroup = () => {
+    deleteGardenGroup(gardenGroup);
+    navigate('/gardenIndex');
   };
 
   return(
-    <>
+    <div className="container">
       {displayError && <p>There was an error retrieving this garden group. Please refresh.</p>}
       {!displayError && gardenGroup && 
         <>
-          <h3>{gardenGroup.name}</h3>
+          <h3 className="text-center pt-3 fs-1">{gardenGroup.name}</h3>
+          <h5 className="fs-5 fw-medium">Garden Group Requirements</h5>
+          {show('reqs') ? (
+            <ActionableListItems listItems={gardenGroup.reqs} actions={groupReqActions}/>
+          ) : (
+            <p>This garden group has no requirements.</p>
+          )}
           {
-            gardenGroup.reqs &&
             <>
-              <p>Requirements:</p>
-              <ul>
-                {gardenGroup.reqs.map(req => <li>{req}</li>)}
-              </ul>
+              <h5 className="fs-5 fw-medium">Sunlight Offering</h5>
+              <p>{gardenGroup.sunlightOffering}</p>
             </>
           }
-          {groupHasPlants() &&
-            <>
-              <h3>Plants</h3>
-              <ul>
-                {gardenGroup.plants.map(plant => <li>{plant.name}</li>)}
-              </ul>
-            </>
-          }
+          <h5 className="fs-5 fw-medium">Plants</h5>
+          {show('plants') ? (
+            <ActionableListItems listItems={gardenGroup.plants} actions={plantActions} keyProp="id" displayNameKey="name"/>
+          ) : (
+            <p>This garden group has no plants. Please add some below.</p>
+          )}
           <div className="input-group mb-3">
-            <button className="btn btn-outline-secondary" type="button" id="addPlant" onClick={addPlantToGroup}>Add</button>
-            <input type="text" className="form-control" ref={addPlantInputRef} placeholder="Add Plant" aria-label="Add Plant" aria-describedby="addPlant" onChange={onPlantChange} />
+            <button className="btn btn-primary" type="button" id="addPlant" onClick={addPlantToGroup}>Add</button>
+            <input type="text" className="form-control" ref={addPlantInputRef} placeholder="Plant" aria-label="Add Plant" aria-describedby="addPlant" onChange={onPlantChange} />
+          </div>
+
+          <div className="btn-group" role="group" aria-label="Delete or View All">
+            <button type="button" className="btn btn-outline-danger" onClick={removeGardenGroup}>Delete This Garden Group</button>
+            <Link className="btn btn-outline-primary" to="/gardenIndex">View All Garden Groups</Link>
           </div>
         </>
       }
-    </>
+    </div>
   );
 };
 
