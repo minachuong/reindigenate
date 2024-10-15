@@ -77,7 +77,7 @@ const CreateGardenGroup = () => {
           <p className="text-center px-3 fs-6">
             Reindigenizing land means to heal our relationship with land. 
             To do that, we must know and honor the native people who in the past and very present cultivate the land. 
-            <small> Learn more about this native territory by visiting the <Link to={territory.description} target="_blank">Native Land Digital Archive</Link>.</small>
+            <small className="d-block"> Learn more about this native territory by visiting the <Link to={territory.description} target="_blank">Native Land Digital Archive</Link>.</small>
           </p>
           <p className="text-center fs-6">
             Begin your journey of healing the land by providing information about an area of your garden you wish to add a native plant to.
