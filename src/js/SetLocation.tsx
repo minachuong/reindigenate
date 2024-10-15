@@ -19,6 +19,13 @@ const SetLocation = () => {
     navigateToCreateGardenGroup();
   };
 
+  const hasStoredCoordinates = () => {
+    const lat = localStorage.getItem('lat');
+    const long = localStorage.getItem('long');
+
+    return lat && long;
+  };
+
   const [retrievedCoordinates, setRetrievedCoordinates] = useState({} as Coordinates);
 
   const requestLocation = async (): Promise<Coordinates> => {
@@ -36,6 +43,11 @@ const SetLocation = () => {
   };
 
   const setLocation = async () => {
+    if (hasStoredCoordinates()) {
+      navigate(`/gardenIndex`);
+      return;
+    }
+
     try {
       await requestLocation();
       navigateToCreateGardenGroup();
