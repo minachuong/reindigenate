@@ -31,7 +31,7 @@ const GardenGroupIndex = () => {
 
   return (
     <div className="container">
-      <h3 className="text-center pt-3 fs-1">Your Garden Groups</h3>
+      <h3 className="text-center py-3 fs-1">Your Garden Groups</h3>
       <ActionableListItems listItems={gardenGroups} actions={groupActions} keyProp="id" displayNameKey="name" navigationHandler={itemNavigationPath}/>
       <div className="btn-group" role="group" aria-label="Create Garden Group">
         <Link className="btn btn-primary" to="/creategardengroup">Create a Garden Group</Link>

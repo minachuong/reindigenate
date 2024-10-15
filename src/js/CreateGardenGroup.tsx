@@ -73,15 +73,20 @@ const CreateGardenGroup = () => {
       {territory && 
         <>
           <h2 className="text-center pt-3 fs-1">{territory.Name}</h2>
+          <p className="text-center px-3 lh-1 fs-5">You are on unceded {territory.Name} Territory.</p>
+          <p className="text-center px-3 fs-6">
+            Reindigenizing land means to heal our relationship with land. 
+            To do that, we must know and honor the native people who in the past and very present cultivate the land. 
+            <small> Learn more about this native territory by visiting the <Link to={territory.description} target="_blank">Native Land Digital Archive</Link>.</small>
+          </p>
           <p className="text-center fs-6">
-            You are on unceded {territory.Name} Territory. To learn more about this native territory, 
-            please visit the <Link to={territory.description}>Native Land Digital Archive</Link>.
-          </p>  
+            Begin your journey of healing the land by providing information about an area of your garden you wish to add a native plant to.
+          </p> 
         </>
       }
       <form onSubmit={createGardenGroup}>
         <div className="form-group pb-3">
-          <label htmlFor="gardenGroupName" className="fs-6 fw-medium">Name a Garden Group</label>
+          <label htmlFor="gardenGroupName" className="fs-6 fw-medium">Name a Garden Group<small className="text-warning">*</small></label>
           <input type="text" className="form-control" id="gardenGroupName" placeholder="Garden group name" onChange={onNameChange}/>
           {showNameErrorMessage && <small className="badge text-bg-danger">Ensure name for your garden group is provided.</small>}
         </div>

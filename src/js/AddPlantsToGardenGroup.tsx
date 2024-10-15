@@ -115,7 +115,6 @@ const AddPlantsToGardenGroup = () => {
             <button className="btn btn-primary" type="button" id="addPlant" onClick={addPlantToGroup}>Add</button>
             <input type="text" className="form-control" ref={addPlantInputRef} placeholder="Plant" aria-label="Add Plant" aria-describedby="addPlant" onChange={onPlantChange} />
           </div>
-
           <div className="btn-group" role="group" aria-label="Delete or View All">
             <button type="button" className="btn btn-outline-danger" onClick={removeGardenGroup}>Delete This Garden Group</button>
             <Link className="btn btn-outline-primary" to="/gardenIndex">View All Garden Groups</Link>
