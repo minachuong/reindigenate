@@ -1,0 +1,1 @@
+{"root":["./src/vite-env.d.ts","./src/js/actionablelistitems.tsx","./src/js/addplantstogardengroup.tsx","./src/js/creategardengroup.tsx","./src/js/gardengroupindex.tsx","./src/js/gardengroupservice.tsx","./src/js/loadingdroplet.tsx","./src/js/setlocation.tsx","./src/js/sunlightofferingdropdown.tsx","./src/js/main.tsx"],"version":"5.6.3"}
